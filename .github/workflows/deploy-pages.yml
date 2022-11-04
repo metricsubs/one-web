@@ -13,11 +13,11 @@ jobs:
 
       - uses: actions/setup-node@v2.1.5
         with:
-          node-version: '16'
+          node-version: "16"
 
       - uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
@@ -27,9 +27,8 @@ jobs:
       - name: Build all
         run: |
           yarn build
-      
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out/
+          path: ./out
