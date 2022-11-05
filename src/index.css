@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+}
+
+@keyframes sk-rotate-plane {
+  0% {
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    transform: perspective(120px) rotateX(0deg) rotateY(-179.9deg);
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+.page-loader-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-loader {
+  width: 40px;
+  height: 40px;
+  animation: sk-rotate-plane 1.2s infinite ease-in-out;
+}

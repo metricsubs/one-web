@@ -1,12 +1,7 @@
-node_modules/
-dist
-dist-ssr
-*.local
-.env
+.gitignore
+node_modules
 *.log
 yarn-debug.log*
 yarn-error.log*
 *.tsbuildinfo
-
-# macOS
 .DS_Store
