@@ -2,7 +2,12 @@ import {ColorScheme, ColorSchemeProvider, MantineProvider} from '@mantine/core';
 import {useColorScheme} from '@mantine/hooks';
 import {useState} from 'react';
 
-export default function App() {
+import {Entrances} from '@entrances';
+import {EntrancesContext} from 'hooks';
+
+const entrances = new Entrances();
+
+export function App() {
   const preferredColorScheme = useColorScheme();
   const [colorScheme, setColorScheme] =
     useState<ColorScheme>(preferredColorScheme);
@@ -10,13 +15,19 @@ export default function App() {
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
   return (
-    <ColorSchemeProvider
-      colorScheme={colorScheme}
-      toggleColorScheme={toggleColorScheme}
-    >
-      <MantineProvider theme={{colorScheme}} withGlobalStyles withNormalizeCSS>
-        <div>hello</div>
-      </MantineProvider>
-    </ColorSchemeProvider>
+    <EntrancesContext.Provider value={entrances}>
+      <ColorSchemeProvider
+        colorScheme={colorScheme}
+        toggleColorScheme={toggleColorScheme}
+      >
+        <MantineProvider
+          theme={{colorScheme}}
+          withGlobalStyles
+          withNormalizeCSS
+        >
+          <div>hello</div>
+        </MantineProvider>
+      </ColorSchemeProvider>
+    </EntrancesContext.Provider>
   );
 }
