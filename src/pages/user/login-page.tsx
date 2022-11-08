@@ -111,7 +111,7 @@ export function LoginPage() {
         </Grid.Col>
       </MediaQuery>
       <Grid.Col lg={5} md={12}>
-        <Container p={60} size="sm" h="100%">
+        <Container p={60} size="sm" h="100%" maw="600px">
           <form
             style={{
               width: '100%',
@@ -120,6 +120,7 @@ export function LoginPage() {
               flexDirection: 'column',
               justifyContent: 'center',
             }}
+            onSubmit={form.onSubmit(values => console.log(values))}
           >
             <Image
               src={LogoSVG}
