@@ -56,6 +56,10 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build
         run: ${{ steps.detect-package-manager.outputs.runner }} build
+        env:
+          ONE_LEANCLOUD_API_ENDPOINT: ${{ secrets.ONE_LEANCLOUD_API_ENDPOINT }}
+          ONE_LEANCLOUD_APP_ID: ${{ secrets.ONE_LEANCLOUD_APP_ID }}
+          ONE_LEANCLOUD_APP_KEY: ${{ secrets.ONE_LEANCLOUD_APP_KEY }}
       - name: Add CNAME file
         run: echo "one.metricsubs.cn" > dist/CNAME
       - name: Upload artifact
