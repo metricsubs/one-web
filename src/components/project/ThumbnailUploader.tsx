@@ -3,9 +3,6 @@ import {IconArrowBarUp} from '@tabler/icons';
 import classNames from 'classnames';
 import {useCallback, useRef, useState} from 'react';
 
-import {client} from 'feathers';
-import {parseErrorMessage, post} from 'utils';
-
 interface ThumbnailUploaderStylesParams {
   forceOverlayShow: boolean;
 }
@@ -58,7 +55,6 @@ export function ThumbnailUploader(props: ThumbnailUploaderProps) {
   const [thumbnailTimestamp, setThumbnailTimestamp] = useState<number>(
     Date.now(),
   );
-  const {s3PublicURL} = client.get('config');
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -77,40 +73,14 @@ export function ThumbnailUploader(props: ThumbnailUploaderProps) {
         return;
       }
       setUploadLoading(true);
-      client
-        .service('uploads')
-        .getThumbnailUploadOptions({
-          type,
-          id,
-        })
-        .then(options => {
-          const formData = new FormData();
-          formData.append('file', file, file.name);
-          return post('/upload', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'x-upload-options': options.options,
-              'x-upload-signature': options.signature,
-            },
-          });
-        })
-        .then(() => {
-          refreshThumbnail();
-        })
-        .catch(error => {
-          const message = parseErrorMessage(error);
-          onError(message);
-        })
-        .finally(() => {
-          setUploadLoading(false);
-        });
 
       e.target.value = '';
     },
-    [id, onError, refreshThumbnail, type],
+    [],
   );
 
-  const thumbnailURL = getThumbnailURL(s3PublicURL, type, id);
+  // TODO: Add a way to remove the thumbnail
+  const thumbnailURL = getThumbnailURL('', type, id);
 
   return (
     <div

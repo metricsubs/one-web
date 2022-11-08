@@ -1,8 +1,7 @@
 import {Card, Stack, Text} from '@mantine/core';
-import type {ProjectsResult} from '@metricsubs/one-server/dist/services/projects/projects.schema';
 
 export interface ProjectCardProps {
-  project: ProjectsResult;
+  project: any;
 }
 
 export function ProjectCard(props: ProjectCardProps): React.ReactElement {
