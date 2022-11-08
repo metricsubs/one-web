@@ -30,6 +30,10 @@ export function App() {
   const [user, setUser] = useAtom(userAtom);
 
   useEffect(() => {
+    setColorScheme(preferredColorScheme);
+  }, [preferredColorScheme]);
+
+  useEffect(() => {
     const init = async () => {
       const userModel = await recoverUserSession();
       if (userModel) {
