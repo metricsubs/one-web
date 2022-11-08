@@ -22,9 +22,61 @@ import LoginIllustration2Image from 'assets/login_illustration_2.svg';
 import LoginIllustration3Image from 'assets/login_illustration_3.svg';
 import LogoSVG from 'assets/metricsubs.svg';
 
+const PageCarouselSection = () => {
+  const autoplay = useRef(Autoplay({delay: 5000}));
+
+  return (
+    <Carousel
+      mx="auto"
+      withIndicators
+      height="100vh"
+      plugins={[autoplay.current]}
+      onMouseEnter={autoplay.current.stop}
+      onMouseLeave={autoplay.current.reset}
+      loop
+    >
+      <Carousel.Slide>
+        <Stack align="center" justify="center" h="100%" p={100}>
+          <Image src={LoginIllustration1Image} height="35vh" fit="contain" />
+          <Text size="xl" weight="bold" mt="lg">
+            Built by Translators for Translators
+          </Text>
+          <Text align="center">
+            Brought to you by the team behind the popular tech channel on
+            Bilibili. We use our own products to translate videos every day.
+          </Text>
+        </Stack>
+      </Carousel.Slide>
+      <Carousel.Slide>
+        <Stack align="center" justify="center" h="100%" p={100}>
+          <Image src={LoginIllustration2Image} height="35vh" fit="contain" />
+          <Text size="xl" weight="bold" mt="lg">
+            Open Source & Free
+          </Text>
+          <Text align="center">
+            We believe in open source and free software. We are committed to
+            bring efficient and high quality tools to the community.
+          </Text>
+        </Stack>
+      </Carousel.Slide>
+      <Carousel.Slide>
+        <Stack align="center" justify="center" h="100%" p={100}>
+          <Image src={LoginIllustration3Image} height="35vh" fit="contain" />
+          <Text size="xl" weight="bold" mt="lg">
+            Modernization in Action
+          </Text>
+          <Text align="center">
+            We are building a new generation of video translation tools. Video
+            translation should be fun and easy.
+          </Text>
+        </Stack>
+      </Carousel.Slide>
+    </Carousel>
+  );
+};
+
 export function LoginPage() {
   const theme = useMantineTheme();
-  const autoplay = useRef(Autoplay({delay: 5000}));
   const [errorMessage, setErrorMessage] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -55,66 +107,7 @@ export function LoginPage() {
                 : theme.colors.gray[9],
           }}
         >
-          <Carousel
-            mx="auto"
-            withIndicators
-            height="100vh"
-            plugins={[autoplay.current]}
-            onMouseEnter={autoplay.current.stop}
-            onMouseLeave={autoplay.current.reset}
-            loop
-          >
-            <Carousel.Slide>
-              <Stack align="center" justify="center" h="100%" p={100}>
-                <Image
-                  src={LoginIllustration1Image}
-                  height="35vh"
-                  fit="contain"
-                />
-                <Text size="xl" weight="bold" mt="lg">
-                  Built by Translators for Translators
-                </Text>
-                <Text align="center">
-                  Brought to you by the team behind the popular tech channel on
-                  Bilibili. We use our own products to translate videos every
-                  day.
-                </Text>
-              </Stack>
-            </Carousel.Slide>
-            <Carousel.Slide>
-              <Stack align="center" justify="center" h="100%" p={100}>
-                <Image
-                  src={LoginIllustration2Image}
-                  height="35vh"
-                  fit="contain"
-                />
-                <Text size="xl" weight="bold" mt="lg">
-                  Open Source & Free
-                </Text>
-                <Text align="center">
-                  We believe in open source and free software. We are committed
-                  to bring efficient and high quality tools to the community.
-                </Text>
-              </Stack>
-            </Carousel.Slide>
-            <Carousel.Slide>
-              <Stack align="center" justify="center" h="100%" p={100}>
-                <Image
-                  src={LoginIllustration3Image}
-                  height="35vh"
-                  fit="contain"
-                />
-                <Text size="xl" weight="bold" mt="lg">
-                  Modernization in Action
-                </Text>
-                <Text align="center">
-                  We are building a new generation of video translation tools.
-                  Video translation should be fun and easy.
-                </Text>
-              </Stack>
-            </Carousel.Slide>
-            {/* ...other slides */}
-          </Carousel>
+          <PageCarouselSection />
         </Grid.Col>
       </MediaQuery>
       <Grid.Col lg={5} md={12}>
@@ -156,7 +149,7 @@ export function LoginPage() {
                 type="password"
                 size="md"
                 mt={6}
-                {...form.getInputProps('email')}
+                {...form.getInputProps('password')}
               />
             </Input.Wrapper>
             <Checkbox
@@ -164,7 +157,14 @@ export function LoginPage() {
               mb={14}
               {...form.getInputProps('termsOfService', {type: 'checkbox'})}
             />
-            <Button fullWidth size="md" mb={6} loading={loginLoading}>
+            <Button
+              fullWidth
+              size="md"
+              mb={6}
+              loading={loginLoading}
+              disabled={!form.values.termsOfService}
+              type="submit"
+            >
               Login
             </Button>
             <Tooltip
