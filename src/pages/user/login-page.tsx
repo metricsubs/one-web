@@ -11,7 +11,7 @@ import {
   MediaQuery,
   Stack,
   Text,
-  Tooltip,
+  Popover,
   useMantineTheme,
 } from '@mantine/core';
 import {useForm} from '@mantine/form';
@@ -226,18 +226,18 @@ export function LoginPage() {
             >
               Login
             </Button>
-            <Tooltip
-              multiline
-              width={220}
-              withArrow
-              transition="fade"
-              transitionDuration={200}
-              label="Contact Gliiiiiitchy(529189858) in the QQ group chat for help."
-            >
-              <Anchor align="center" href="#" size="sm" mt={4}>
-                Can&apos;t log in?
-              </Anchor>
-            </Tooltip>
+            <Popover width={250} position="bottom" withArrow shadow="md">
+              <Popover.Target>
+                <Anchor align="center" href="#" size="sm" mt={4}>
+                  Can&apos;t log in?
+                </Anchor>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Text size="sm">
+                  Contact Gliiiiiitchy(529189858) in the QQ group chat for help.
+                </Text>
+              </Popover.Dropdown>
+            </Popover>
           </form>
         </Container>
       </Grid.Col>
