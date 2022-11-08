@@ -1,5 +1,6 @@
 import {Carousel} from '@mantine/carousel';
 import {
+  Alert,
   Anchor,
   Button,
   Checkbox,
@@ -14,13 +15,19 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import {useForm} from '@mantine/form';
+import {IconAlertCircle} from '@tabler/icons';
 import Autoplay from 'embla-carousel-autoplay';
+import {useAtom} from 'jotai';
 import {useRef, useState} from 'react';
+import {useNavigate, useSearchParams} from 'react-router-dom';
 
 import LoginIllustration1Image from 'assets/login_illustration_1.svg';
 import LoginIllustration2Image from 'assets/login_illustration_2.svg';
 import LoginIllustration3Image from 'assets/login_illustration_3.svg';
 import LogoSVG from 'assets/metricsubs.svg';
+import {userLogin} from 'core/services';
+import {userAtom} from 'states';
+import {parseErrorMessage} from 'utils';
 
 const PageCarouselSection = () => {
   const autoplay = useRef(Autoplay({delay: 5000}));
@@ -77,6 +84,11 @@ const PageCarouselSection = () => {
 
 export function LoginPage() {
   const theme = useMantineTheme();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const redirectURL = searchParams.get('redirect') || '/';
+
+  const [_, setUser] = useAtom(userAtom);
   const [errorMessage, setErrorMessage] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -89,8 +101,30 @@ export function LoginPage() {
 
     validate: {
       email: value => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      password: value => (value.length >= 8 ? null : 'Password is too short'),
     },
   });
+
+  const onLoginFormSubmit = (values: typeof form.values) => {
+    setLoginLoading(true);
+    setErrorMessage('');
+
+    const {email, password} = values;
+
+    const login = async () => {
+      const userModel = await userLogin(email, password);
+      setUser(userModel);
+      navigate(redirectURL);
+    };
+
+    login()
+      .catch(error => {
+        setErrorMessage(parseErrorMessage(error));
+      })
+      .finally(() => {
+        setLoginLoading(false);
+      });
+  };
 
   return (
     <Grid gutter={0} mih="100vh">
@@ -120,8 +154,31 @@ export function LoginPage() {
               flexDirection: 'column',
               justifyContent: 'center',
             }}
-            onSubmit={form.onSubmit(values => console.log(values))}
+            onSubmit={form.onSubmit(
+              values => onLoginFormSubmit(values),
+              errors => {
+                const errorMessage = Object.values(errors).at(0) as
+                  | string
+                  | undefined;
+                if (!errorMessage) {
+                  return;
+                }
+                setErrorMessage(errorMessage);
+              },
+            )}
           >
+            {errorMessage ? (
+              <Alert
+                icon={<IconAlertCircle size={16} />}
+                title="Error"
+                color="red"
+                mb={12}
+                withCloseButton
+                onClose={() => setErrorMessage('')}
+              >
+                {errorMessage}
+              </Alert>
+            ) : undefined}
             <Image
               src={LogoSVG}
               height={42}

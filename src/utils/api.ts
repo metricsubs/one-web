@@ -1,4 +1,4 @@
-export function parseErrorMessage(error: unknown): string {
+function _parseErrorMessage(error: unknown): string {
   if (typeof error === 'string') {
     return error;
   }
@@ -17,4 +17,10 @@ export function parseErrorMessage(error: unknown): string {
   }
 
   return 'Unknown error';
+}
+
+export function parseErrorMessage(error: unknown): string {
+  let errorMessage = _parseErrorMessage(error);
+  errorMessage = errorMessage.replace(/\s+\[(.*?)\]$/, '');
+  return errorMessage;
 }
