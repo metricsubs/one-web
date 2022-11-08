@@ -17,11 +17,11 @@ import {
   IconShieldLock,
 } from '@tabler/icons';
 import {useAtomValue} from 'jotai';
-import {User} from 'leancloud-storage';
 import {useCallback} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import LogoSVG from 'assets/metricsubs.svg';
+import {userLogout} from 'core/services';
 import {userAtom} from 'states';
 import {nullThrows} from 'utils';
 
@@ -32,7 +32,7 @@ export function Header() {
   const user = nullThrows(useAtomValue(userAtom));
 
   const onLogoutButtonClick = useCallback(() => {
-    User.logOut().then(() => {
+    userLogout().then(() => {
       showNotification({
         title: 'Success',
         message: 'Logged out successfully, redirecting to login page...',

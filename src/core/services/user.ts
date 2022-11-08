@@ -23,3 +23,8 @@ export async function userLogin(
   localStorage.setItem('sessionToken', sessionToken);
   return userModel;
 }
+
+export async function userLogout(): Promise<void> {
+  await User.logOut();
+  localStorage.removeItem('sessionToken');
+}
