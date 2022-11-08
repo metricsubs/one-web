@@ -192,6 +192,7 @@ export function LoginPage() {
                 id="input-email"
                 placeholder="Your email"
                 size="md"
+                mt={6}
                 {...form.getInputProps('email')}
               />
             </Input.Wrapper>

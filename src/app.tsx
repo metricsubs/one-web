@@ -1,4 +1,4 @@
-import {MantineProvider} from '@mantine/core';
+import {ColorScheme, ColorSchemeProvider, MantineProvider} from '@mantine/core';
 import {useColorScheme} from '@mantine/hooks';
 import {NotificationsProvider, showNotification} from '@mantine/notifications';
 import {useAtom} from 'jotai';
@@ -20,7 +20,11 @@ initLeancloudStorage({
 });
 
 export function App() {
-  const colorScheme = useColorScheme();
+  const preferredColorScheme = useColorScheme();
+  const [colorScheme, setColorScheme] =
+    useState<ColorScheme>(preferredColorScheme);
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useAtom(userAtom);
@@ -47,39 +51,46 @@ export function App() {
   }, [setUser]);
 
   return (
-    <MantineProvider theme={{colorScheme}} withGlobalStyles withNormalizeCSS>
-      <NotificationsProvider>
-        {loading ? (
-          <PageLoader />
-        ) : (
-          <Routes>
-            <Route
-              path="/"
-              element={user ? <Navigate to="/app" /> : <Navigate to="/login" />}
-            />
-            <Route path="login" element={<LoginPage />} />
-            <Route
-              path="app/*"
-              element={
-                user ? (
-                  <AuthenticatedApp />
-                ) : (
-                  <Navigate to={`/login?redirect=${location.pathname}`} />
-                )
-              }
-            />
-            <Route
-              path="*"
-              element={
-                <ErrorPage
-                  statusCode={404}
-                  message="Unfortunately, this is only a 404 page. You may have mistyped the address, or the page has been moved to another URL."
-                />
-              }
-            />
-          </Routes>
-        )}
-      </NotificationsProvider>
-    </MantineProvider>
+    <ColorSchemeProvider
+      colorScheme={colorScheme}
+      toggleColorScheme={toggleColorScheme}
+    >
+      <MantineProvider theme={{colorScheme}} withGlobalStyles withNormalizeCSS>
+        <NotificationsProvider>
+          {loading ? (
+            <PageLoader />
+          ) : (
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  user ? <Navigate to="/app" /> : <Navigate to="/login" />
+                }
+              />
+              <Route path="login" element={<LoginPage />} />
+              <Route
+                path="app/*"
+                element={
+                  user ? (
+                    <AuthenticatedApp />
+                  ) : (
+                    <Navigate to={`/login?redirect=${location.pathname}`} />
+                  )
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <ErrorPage
+                    statusCode={404}
+                    message="Unfortunately, this is only a 404 page. You may have mistyped the address, or the page has been moved to another URL."
+                  />
+                }
+              />
+            </Routes>
+          )}
+        </NotificationsProvider>
+      </MantineProvider>
+    </ColorSchemeProvider>
   );
 }
