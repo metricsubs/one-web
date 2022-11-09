@@ -1,11 +1,16 @@
 import {Box, BoxProps, createStyles, Image} from '@mantine/core';
 import {IconUpload} from '@tabler/icons';
+import {useRef, useState} from 'react';
 
 const useStyles = createStyles(theme => ({
   container: {
     position: 'relative',
     borderRadius: 5,
     overflow: 'hidden',
+    backgroundColor:
+      theme.colorScheme === 'dark'
+        ? theme.colors.dark[5]
+        : theme.colors.gray[1],
   },
   overlay: {
     backgroundColor:
@@ -29,29 +34,66 @@ const useStyles = createStyles(theme => ({
       opacity: 1,
     },
   },
+  fileInput: {
+    display: 'none',
+  },
 }));
 
 export interface ProjectThumbnailUploaderProps extends BoxProps {
   width: number;
   height: number;
+  value: File | undefined;
+  onChange: (file: File) => void;
 }
 
 export function ProjectThumbnailUploader(props: ProjectThumbnailUploaderProps) {
-  const {width, height, ...boxProps} = props;
+  const {width, height, onChange, ...boxProps} = props;
 
   const {classes} = useStyles();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+
+  const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    onChange(file);
+    const reader = new FileReader();
+    reader.onload = function () {
+      setImageSrc(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+    console.log(file);
+
+    e.target.value = '';
+  };
 
   return (
-    <Box className={classes.container} sx={{height}} {...boxProps}>
+    <Box
+      className={classes.container}
+      sx={{height}}
+      {...boxProps}
+      onClick={() => inputRef.current?.click()}
+    >
       <Box className={classes.overlay}>
         <IconUpload strokeWidth={2.1} />
       </Box>
+      <input
+        className={classes.fileInput}
+        type="file"
+        accept="image/jpg, image/jpeg, image/png, image/gif, image/bmp, image/webp"
+        ref={inputRef}
+        value={undefined}
+        onChange={onFileInputChange}
+      />
       <Image
         withPlaceholder
         width={width}
         height={height}
         fit="cover"
-        src=""
+        src={imageSrc}
         alt="Random unsplash image"
       />
     </Box>

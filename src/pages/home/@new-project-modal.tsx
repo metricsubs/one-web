@@ -23,6 +23,9 @@ export function NewProjectModal(props: NewProjectModalProps) {
   const {opened, onClose} = props;
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [thumbnailFile, setThumbnailFile] = useState<File | undefined>(
+    undefined,
+  );
 
   const form = useForm({
     initialValues: {
@@ -66,8 +69,13 @@ export function NewProjectModal(props: NewProjectModalProps) {
             {errorMessage}
           </Alert>
         ) : undefined}
-        <Stack align="center">
-          <ProjectThumbnailUploader width={190} height={126} />
+        <Stack align="center" mb="sm">
+          <ProjectThumbnailUploader
+            width={190}
+            height={126}
+            value={thumbnailFile}
+            onChange={file => setThumbnailFile(file)}
+          />
         </Stack>
         <TextInput
           label="Name"
